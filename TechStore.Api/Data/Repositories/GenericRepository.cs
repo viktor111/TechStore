@@ -5,6 +5,7 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
+using TechStore.Api.Data.Enteties;
 
 namespace TechStore.Api.Data.Repositories
 {
@@ -24,6 +25,8 @@ namespace TechStore.Api.Data.Repositories
         public async virtual Task<T> Add(T entity)
         {
             var result = await _dbContext.AddAsync(entity);
+
+            await SaveChanges();
 
             return result.Entity;
         }
@@ -46,6 +49,15 @@ namespace TechStore.Api.Data.Repositories
             return result;
         }
 
+        public async virtual Task<T> GetByProperty(Expression<Func<T, bool>> predicate)
+        {
+            var genericDb = _dbContext.Set<T>();
+
+            var result = await genericDb.SingleAsync(predicate);
+
+            return result;
+        }
+
         public async virtual Task<T> Get(int id, bool include)
         {
             return await _dbContext.FindAsync<T>(id);
@@ -56,9 +68,23 @@ namespace TechStore.Api.Data.Repositories
             return (await _dbContext.SaveChangesAsync()) > 0;
         }
 
-        public virtual T Update(T entity)
+        public async virtual Task<T> Update(T entity)
         {
-            return _dbContext.Update(entity).Entity;
+            var result =  _dbContext.Update(entity).Entity;
+            await SaveChanges();
+            return result;
+        }
+
+        public virtual Task<T> Delete(T entity)
+        {
+            _dbContext.Remove(entity);
+
+            return Task.FromResult(entity);
+        }
+
+        public async virtual Task<T> AddToCart(T product, Cart cart)
+        {
+            return product;
         }
     }
 }

@@ -16,7 +16,7 @@ namespace TechStore.Api.Data.Enteties
 
         public CategoryType Category { get; set; }
 
-        public IEnumerable<CartProduct> CartProduct { get; set; }
+        public ICollection<CartProduct> CartProduct { get; set; }
 
     }
 }

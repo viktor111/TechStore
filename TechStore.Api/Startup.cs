@@ -30,7 +30,7 @@ namespace TechStore.Api
             services.AddDbContext<TechStoreDbContext>();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-
+             
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -39,6 +39,7 @@ namespace TechStore.Api
 
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();
+            services.AddScoped<IRepository<Cart>, CartRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

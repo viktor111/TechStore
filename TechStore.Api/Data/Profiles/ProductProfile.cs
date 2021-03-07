@@ -10,6 +10,8 @@ namespace TechStore.Api.Data.Profiles
         public ProductProfile()
         {
             CreateMap<Product, ProductModel>();
+
+            CreateMap<ProductModel, Product>();
         }
     }
 }

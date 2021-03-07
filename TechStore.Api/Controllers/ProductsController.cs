@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
@@ -17,18 +19,24 @@ namespace TechStore.Api.Controllers
         private readonly IRepository<Product> _productRepository;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
+        private readonly IWebHostEnvironment _webHostEnvironment;
+        private readonly IRepository<Cart> _cartRepository;
 
 
         public ProductsController
             (
                 IRepository<Product> productRepository,
                 IMapper mapper,
-                ILogger<ProductsController> logger
+                ILogger<ProductsController> logger,
+                IWebHostEnvironment webHostEnvironment,
+                IRepository<Cart> cartRepository
             )
         {
             _productRepository = productRepository;
             _mapper = mapper;
             _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
+            _cartRepository = cartRepository;
         }
 
         [HttpGet]
@@ -44,16 +52,180 @@ namespace TechStore.Api.Controllers
 
                 return result;
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError, "Database Failure");
+                _logger.LogError(ex.Message);
+
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
         }
 
-        [HttpPost]
-        public ActionResult<ProductModel> Post(ProductModel model)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<ProductModel>> Get(int id)
         {
-             throw new NotImplementedException();
+            try
+            {
+                _logger.LogInformation("Get single product...");
+
+                var data = await _productRepository.Get(id);
+
+                var result = _mapper.Map<ProductModel>(data);
+
+                return result;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpPost]        
+        public async Task<ActionResult<ProductModel>> Post(ProductModel model)
+        {
+            try
+            {
+                _logger.LogInformation("Create new product...");
+
+                var existing = await _productRepository.GetByProperty(p => p.Name == model.Name);
+                if(existing is not null)
+                {
+                    return BadRequest("Product already exists");
+                }
+
+                var productMapped = _mapper.Map<Product>(model);
+
+                var result = _productRepository.Add(productMapped);
+
+                return model;
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+        }
+
+        [HttpPut("{id:int}")]
+        public async Task<ActionResult<ProductModel>> Put(int id, ProductModel model)
+        {
+            try
+            {
+                var oldProduct = await _productRepository.Get(id);
+
+                if (oldProduct is null)
+                {
+                    return NotFound($"Could not find product with id {id}");
+                }
+
+                _mapper.Map(model, oldProduct);
+
+                if (await _productRepository.SaveChanges())
+                {
+                    return _mapper.Map<ProductModel>(oldProduct);
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex.Message);
+
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+
+            return BadRequest();
+        }
+
+        [HttpDelete("{id:int}")]
+        public async Task<ActionResult<ProductModel>> Delete(int id)
+        {
+            try
+            {
+                var oldProduct = await _productRepository.Get(id);
+
+                if(oldProduct is null)
+                {
+                    return NotFound($"Could not find product with id {id}");
+                }
+
+                await _productRepository.Delete(oldProduct);
+
+                if (await _productRepository.SaveChanges())
+                {
+                    return Ok($"Product with id {id} deleted");
+                }
+            }
+            catch (Exception ex)
+            {
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+
+            return BadRequest();
+
+        }
+
+        [HttpPost("{productId:int}/{cartId:int}")]
+        public async Task<ActionResult<ProductModel>> AddToCart(int productId, int cartId, bool includeCart = false)
+        {
+            try
+            {
+                var product = await _productRepository.Get(productId, includeCart);
+                var cart = await _cartRepository.Get(cartId);
+
+                if(product is null)
+                {
+                    return NotFound($"Could not find product with id {productId}");
+                }
+                if(cart is null)
+                {
+                    return NotFound($"Could not find cart with id {cartId}");
+                }
+
+                var result = await _productRepository.AddToCart(product, cart);
+
+                if (await _productRepository.SaveChanges())
+                {
+                    return _mapper.Map<ProductModel>(result);
+                }
+
+            }
+            catch (Exception ex)
+            {
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
+            }
+
+            return BadRequest();
         }
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Threading.Tasks;
 using AutoMapper;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
@@ -17,17 +19,21 @@ namespace TechStore.Api.Controllers
         private ILogger _logger;
         private readonly IRepository<User> _userRepository;
         private readonly IMapper _mapper;
+        private IWebHostEnvironment _webHostEnvironment;
+
 
         public UsersController
             (
                 IRepository<User> userRepository,
                 IMapper mapper,
-                ILogger<UsersController> logger
+                ILogger<UsersController> logger,
+                IWebHostEnvironment webHostEnvironment
             )
         {
             _userRepository = userRepository;
             _mapper = mapper;
             _logger = logger;
+            _webHostEnvironment = webHostEnvironment;
         }
 
         [HttpGet]
@@ -37,7 +43,7 @@ namespace TechStore.Api.Controllers
             {
                 _logger.LogInformation("Getting User...");
 
-                var data = await _userRepository.Get(1, true);
+                var data = await _userRepository.Get(1, includeCart);
 
                 var result = _mapper.Map<UserModel>(data);
 
@@ -46,8 +52,15 @@ namespace TechStore.Api.Controllers
             catch (Exception ex)
             {
                 _logger.LogError(ex.Message);
-                return StatusCode(StatusCodes.Status500InternalServerError, ex);
+
+                if (_webHostEnvironment.IsDevelopment())
+                {
+                    return StatusCode(StatusCodes.Status500InternalServerError, ex);
+                }
+
+                return StatusCode(StatusCodes.Status500InternalServerError, "Database failure");
             }
+            return BadRequest();
         }
     }
 }
