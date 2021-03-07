@@ -38,6 +38,7 @@ namespace TechStore.Api
             });
 
             services.AddScoped<IRepository<Product>, ProductRepository>();
+            services.AddScoped<IRepository<User>, UserRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

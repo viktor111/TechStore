@@ -2,15 +2,17 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TechStore.Api;
 
 namespace TechStore.Api.Migrations
 {
     [DbContext(typeof(TechStoreDbContext))]
-    partial class TechStoreDbContextModelSnapshot : ModelSnapshot
+    [Migration("20210306195509_AddOrderCartAndCartProduct")]
+    partial class AddOrderCartAndCartProduct
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,45 +106,6 @@ namespace TechStore.Api.Migrations
                     b.ToTable("Products");
                 });
 
-            modelBuilder.Entity("TechStore.Api.Data.Enteties.User", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int")
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Adress")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int>("Age")
-                        .HasColumnType("int");
-
-                    b.Property<int>("CartId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Name")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Password")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("PhoneNumber")
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("CartId")
-                        .IsUnique();
-
-                    b.ToTable("Users");
-                });
-
             modelBuilder.Entity("TechStore.Api.Data.Enteties.CartProduct", b =>
                 {
                     b.HasOne("TechStore.Api.Data.Enteties.Cart", "Cart")
@@ -162,22 +125,9 @@ namespace TechStore.Api.Migrations
                     b.Navigation("Product");
                 });
 
-            modelBuilder.Entity("TechStore.Api.Data.Enteties.User", b =>
-                {
-                    b.HasOne("TechStore.Api.Data.Enteties.Cart", "Cart")
-                        .WithOne("User")
-                        .HasForeignKey("TechStore.Api.Data.Enteties.User", "CartId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Cart");
-                });
-
             modelBuilder.Entity("TechStore.Api.Data.Enteties.Cart", b =>
                 {
                     b.Navigation("CartProduct");
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("TechStore.Api.Data.Enteties.Product", b =>

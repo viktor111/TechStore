@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
 using TechStore.Models.Models;
@@ -11,24 +12,33 @@ namespace TechStore.Api.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ProductController : ControllerBase
+    public class ProductsController : ControllerBase
     {
         private readonly IRepository<Product> _productRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
 
-        public ProductController(IRepository<Product> productRepository, IMapper mapper)
+        public ProductsController
+            (
+                IRepository<Product> productRepository,
+                IMapper mapper,
+                ILogger<ProductsController> logger
+            )
         {
             _productRepository = productRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         [HttpGet]
-        public ActionResult<ProductModel[]> Get()
+        public async Task<ActionResult<ProductModel[]>> Get()
         {
             try
-            {
-                var data = _productRepository.All();
+            {                
+                _logger.LogInformation($"Getting Products...");
+
+                var data = await _productRepository.All();
 
                 var result = _mapper.Map<ProductModel[]>(data);
 

@@ -11,11 +11,11 @@ namespace TechStore.Api.Data.Repositories
 
         T Update(T entity);
 
-        Task<T> Get(int id);
+        Task<T> Get(int id, bool include = false);
 
-        IEnumerable<T> All();
+        Task<IEnumerable<T>> All();
 
-        IEnumerable<T> Find(Expression<Func<T, bool>> predicate);
+        Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate);
 
         Task<bool> SaveChanges();
     }

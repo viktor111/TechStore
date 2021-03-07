@@ -2,13 +2,17 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
+using AutoMapper;
 using TechStore.Api.Data.Enteties;
 
 namespace TechStore.Api.Data.Repositories
 {
     public class ProductRepository : GenericRepository<Product>
     {
-        public ProductRepository(TechStoreDbContext _dbContext)
+        public ProductRepository
+            (
+                TechStoreDbContext _dbContext
+            )
             : base (_dbContext)
         {
 
@@ -16,7 +20,7 @@ namespace TechStore.Api.Data.Repositories
 
         public override Product Update(Product entity)
         {
-            var product = _dbContext.Product
+            var product = _dbContext.Products
                 .Single(p => p.Id == entity.Id);
 
             return base.Update(entity);

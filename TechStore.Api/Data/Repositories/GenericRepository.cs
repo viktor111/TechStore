@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 
 namespace TechStore.Api.Data.Repositories
 {
@@ -11,7 +13,10 @@ namespace TechStore.Api.Data.Repositories
     {
         protected TechStoreDbContext _dbContext;
 
-        public GenericRepository(TechStoreDbContext dbContext)
+        public GenericRepository
+            (
+                TechStoreDbContext dbContext
+            )
         {
             _dbContext = dbContext;
         }
@@ -23,21 +28,25 @@ namespace TechStore.Api.Data.Repositories
             return result.Entity;
         }
 
-        public virtual IEnumerable<T> All()
+        public async virtual Task<IEnumerable<T>> All()
         {
-            return _dbContext.Set<T>()
-                .ToList();
+            var result = await _dbContext.Set<T>()
+                .ToListAsync();
+
+            return result;
         }
 
-        public virtual IEnumerable<T> Find(Expression<Func<T, bool>> predicate)
+        public async virtual Task<IEnumerable<T>> Find(Expression<Func<T, bool>> predicate)
         {
-            return _dbContext.Set<T>()
+            var result = await _dbContext.Set<T>()
                 .AsQueryable()
                 .Where(predicate)
-                .ToList();
+                .ToListAsync();
+
+            return result;
         }
 
-        public async virtual Task<T> Get(int id)
+        public async virtual Task<T> Get(int id, bool include)
         {
             return await _dbContext.FindAsync<T>(id);
         }
