@@ -8,6 +8,8 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
+using Newtonsoft.Json;
+using Newtonsoft;
 
 namespace TechStore.Api
 {
@@ -30,12 +32,16 @@ namespace TechStore.Api
             services.AddDbContext<TechStoreDbContext>();
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
-             
+
+           
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "TechStore.Api", Version = "v1" });
             });
+
+            services.AddDataProtection();
 
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();

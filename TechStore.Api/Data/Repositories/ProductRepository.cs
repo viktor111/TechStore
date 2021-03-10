@@ -38,21 +38,13 @@ namespace TechStore.Api.Data.Repositories
             return result;
         }
 
-        public async override Task<Product> Update(Product entity)
-        {
-            var product = await _dbContext.Products
-                .SingleAsync(p => p.Id == entity.Id);
+        //public async override Task<Product> Update(Product entity)
+        //{
+        //    var product = await _dbContext.Products
+        //        .SingleAsync(p => p.Id == entity.Id);
 
-            return product;
-        }
-
-        public async override Task<Product> GetByProperty(Expression<Func<Product, bool>> predicate)
-        {
-
-            var result = await _dbContext.Products.FirstOrDefaultAsync(predicate);
-
-            return result;
-        }
+        //    return product;
+        //}
 
         public async override Task<Product> Delete(Product product)
         {

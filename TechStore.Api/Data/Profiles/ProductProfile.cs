@@ -11,7 +11,8 @@ namespace TechStore.Api.Data.Profiles
         {
             CreateMap<Product, ProductModel>();
 
-            CreateMap<ProductModel, Product>();
+            CreateMap<ProductModel, Product>()
+                .ForMember(m => m.Id, src => src.Ignore());
         }
     }
 }

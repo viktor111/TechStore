@@ -10,6 +10,7 @@ namespace TechStore.Api.Data.Profiles
         public UserProfile()
         {
             CreateMap<User, UserModel>();
+            CreateMap<UserModel, User>();
         }
     }
 }

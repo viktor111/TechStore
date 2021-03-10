@@ -25,9 +25,7 @@ namespace TechStore.Api.Data.Repositories
         public async virtual Task<T> Add(T entity)
         {
             var result = await _dbContext.AddAsync(entity);
-
             await SaveChanges();
-
             return result.Entity;
         }
 
@@ -53,7 +51,7 @@ namespace TechStore.Api.Data.Repositories
         {
             var genericDb = _dbContext.Set<T>();
 
-            var result = await genericDb.SingleAsync(predicate);
+            var result = await genericDb.FirstOrDefaultAsync(predicate);
 
             return result;
         }
@@ -71,7 +69,7 @@ namespace TechStore.Api.Data.Repositories
         public async virtual Task<T> Update(T entity)
         {
             var result =  _dbContext.Update(entity).Entity;
-            await SaveChanges();
+            //await SaveChanges();
             return result;
         }
 

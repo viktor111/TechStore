@@ -22,7 +22,6 @@ namespace TechStore.Api.Controllers
         private readonly IWebHostEnvironment _webHostEnvironment;
         private readonly IRepository<Cart> _cartRepository;
 
-
         public ProductsController
             (
                 IRepository<Product> productRepository,
@@ -209,7 +208,9 @@ namespace TechStore.Api.Controllers
 
                 var result = await _productRepository.AddToCart(product, cart);
 
-                if (await _productRepository.SaveChanges())
+                var changesToDatabasePersit = await _productRepository.SaveChanges();
+
+                if (changesToDatabasePersit)
                 {
                     return _mapper.Map<ProductModel>(result);
                 }
