@@ -28,5 +28,7 @@ namespace TechStore.Api.Data.Repositories
         Task<bool> SaveChanges();
 
         Task<AuthenticateResponse> Authenticate(T model);
+
+        Task<List<T>> GetListByProperty(Expression<Func<T, bool>> predicate);
     }
 }

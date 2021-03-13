@@ -15,7 +15,7 @@ namespace TechStore.Models.Models
         public decimal Price { get; set; }
 
         [Required]
-        [StringLength(234, ErrorMessage = "Description can't be more than 50 characters")]
+        [StringLength(234, ErrorMessage = "Description can't be more than 234 characters")]
         public string Description { get; set; }
     }
 }

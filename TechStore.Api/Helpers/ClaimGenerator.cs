@@ -14,7 +14,8 @@ namespace TechStore.Api.Helpers
                     new Claim(ClaimTypes.Upn, user.Id.ToString()),
                     new Claim(ClaimTypes.Email, user.Email),
                     new Claim("password", user.Password),
-                    new Claim("admin", user.IsAdmin.ToString())
+                    new Claim("admin", user.IsAdmin.ToString()),
+                    new Claim("cart", user.CartId.ToString())
             };
 
             return claims;

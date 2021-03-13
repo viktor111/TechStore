@@ -69,7 +69,7 @@ namespace TechStore.Api.Data.Repositories
 
         public async virtual Task<T> Update(T entity)
         {
-            var result =  _dbContext.Update(entity).Entity;
+            var result = _dbContext.Update(entity).Entity;
             //await SaveChanges();
             return result;
         }
@@ -91,6 +91,11 @@ namespace TechStore.Api.Data.Repositories
             return new AuthenticateResponse(new UserModel(), "");
         }
 
+        public async virtual Task<List<T>> GetListByProperty(Expression<Func<T, bool>> predicate)
+        {
+            var genericDb = await _dbContext.Set<T>().Where(predicate).ToListAsync();
 
+            return genericDb;
+        }
     }
 }

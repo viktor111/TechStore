@@ -51,6 +51,7 @@ namespace TechStore.Api.Controllers
 
         [HttpGet("{id:int}")]
         [Authorize]
+        [Admin]
         public async Task<ActionResult<UserModel>> Get(int id, bool includeCart = false)
         {
             try
@@ -59,9 +60,7 @@ namespace TechStore.Api.Controllers
 
                 var data = await _userRepository.Get(id, includeCart);
 
-                var result = _mapper.Map<UserModel>(data);
-
-                var user = HttpContext.User.Claims.First(c => c.Type == "admin");
+                var result = _mapper.Map<UserModel>(data);                
 
                 return result;
             }

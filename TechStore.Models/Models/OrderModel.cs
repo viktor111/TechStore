@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections.Generic;
+
 namespace TechStore.Models.Models
 {
     public class OrderModel
@@ -12,5 +14,7 @@ namespace TechStore.Models.Models
         public string PhoneNumber { get; set; }
 
         public decimal Price { get; set; }
+
+        public List<ProductModel> Products { get; set; }        
     }
 }
