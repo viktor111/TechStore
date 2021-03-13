@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 using TechStore.Api.Data.Enteties;
+using TechStore.Models.Models;
 
 namespace TechStore.Api.Data.Repositories
 {
@@ -25,5 +26,7 @@ namespace TechStore.Api.Data.Repositories
         Task<T> AddToCart(T product, Cart cart);
 
         Task<bool> SaveChanges();
+
+        Task<AuthenticateResponse> Authenticate(T model);
     }
 }

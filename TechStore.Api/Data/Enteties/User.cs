@@ -1,4 +1,6 @@
 ﻿using System;
+using Microsoft.AspNetCore.Identity;
+
 namespace TechStore.Api.Data.Enteties
 {
     public class User
@@ -6,6 +8,8 @@ namespace TechStore.Api.Data.Enteties
         public int Id { get; set; }
 
         public string Name { get; set; }
+
+        public string Username { get; set; }
 
         public string Email { get; set; }
 
@@ -16,6 +20,8 @@ namespace TechStore.Api.Data.Enteties
         public string Adress { get; set; }
 
         public string PhoneNumber { get; set; }
+
+        public bool IsAdmin { get; set; }
 
         public int Age { get; set; }
 

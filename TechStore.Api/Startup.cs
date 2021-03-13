@@ -1,15 +1,17 @@
 using System.Reflection;
+using System.Text;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
-using Newtonsoft.Json;
-using Newtonsoft;
+using TechStore.Api.Helpers;
 
 namespace TechStore.Api
 {
@@ -33,7 +35,21 @@ namespace TechStore.Api
 
             services.AddAutoMapper(Assembly.GetExecutingAssembly());
 
-           
+            services.AddAuthentication();
+
+            services.AddAuthentication("OAuth")
+                .AddJwtBearer("OAuth", opt =>
+                {
+                    var secretBytes = Encoding.UTF8.GetBytes(Constants.Secret);
+                    var key = new SymmetricSecurityKey(secretBytes);
+
+                    opt.TokenValidationParameters = new TokenValidationParameters()
+                    {
+                        ValidIssuer = Constants.Issuer,
+                        ValidAudience = Constants.Audiance,
+                        IssuerSigningKey = key
+                    };
+                });
 
             services.AddControllers();
             services.AddSwaggerGen(c =>
@@ -43,6 +59,7 @@ namespace TechStore.Api
 
             services.AddDataProtection();
 
+            services.AddScoped<Validator>();
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IRepository<Cart>, CartRepository>();
@@ -59,6 +76,8 @@ namespace TechStore.Api
             }
 
             app.UseHttpsRedirection();
+
+            app.UseAuthentication();
 
             app.UseRouting();
 

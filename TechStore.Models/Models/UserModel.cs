@@ -12,6 +12,10 @@ namespace TechStore.Models.Models
         public string Name { get; set; }
 
         [Required]
+        [StringLength(20, ErrorMessage = "Username can't be more than 20 characters")]
+        public string Username { get; set; }
+
+        [Required]
         [EmailAddress(ErrorMessage ="Invalid email adress")]
         public string Email { get; set; }
 
@@ -34,6 +38,8 @@ namespace TechStore.Models.Models
         [Required]
         [Range(1,120, ErrorMessage ="You can't be less than 1 or older than 120")]
         public int Age { get; set; }
+
+        public bool IsAdmin { get; set; }
 
         public int CartId { get; set; }
 

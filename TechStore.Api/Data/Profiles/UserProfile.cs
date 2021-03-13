@@ -11,6 +11,7 @@ namespace TechStore.Api.Data.Profiles
         {
             CreateMap<User, UserModel>();
             CreateMap<UserModel, User>();
+            CreateMap<AuthenticateRequest, User>();
         }
     }
 }

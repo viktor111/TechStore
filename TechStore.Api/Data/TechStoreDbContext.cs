@@ -2,6 +2,7 @@
 using Microsoft.Extensions.Configuration;
 using TechStore.Api.Data.Enteties;
 
+
 namespace TechStore.Api
 {
     public class TechStoreDbContext : DbContext

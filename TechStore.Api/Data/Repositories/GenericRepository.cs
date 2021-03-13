@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.EntityFrameworkCore;
 using TechStore.Api.Data.Enteties;
+using TechStore.Models.Models;
 
 namespace TechStore.Api.Data.Repositories
 {
@@ -84,5 +85,12 @@ namespace TechStore.Api.Data.Repositories
         {
             return product;
         }
+
+        public async virtual Task<AuthenticateResponse> Authenticate(T model)
+        {
+            return new AuthenticateResponse(new UserModel(), "");
+        }
+
+
     }
 }
