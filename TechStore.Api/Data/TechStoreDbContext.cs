@@ -32,7 +32,7 @@ namespace TechStore.Api
             modelBuilder.Entity<Cart>()
                 .HasOne(c => c.User)
                 .WithOne(u => u.Cart)
-                .HasForeignKey<User>(u => u.CartId);                          
+                .HasForeignKey<User>(u => u.CartId);
 
             // Many to Many with Cart and Product
             modelBuilder.Entity<CartProduct>()
@@ -46,14 +46,13 @@ namespace TechStore.Api
             modelBuilder.Entity<CartProduct>()
                 .HasOne(t => t.Product)
                 .WithMany(t => t.CartProduct)
-                .HasForeignKey(t => t.ProductId);            
-
+                .HasForeignKey(t => t.ProductId);           
         }
 
         public DbSet<User> Users { get; set; }
         public DbSet<CartProduct> CartProducts { get; set; }
         public DbSet<Order> Orders { get; set; }
         public DbSet<Product> Products { get; set; }
-        public DbSet<Cart> Carts{ get; set; }
+        public DbSet<Cart> Carts { get; set; }
     }
 }

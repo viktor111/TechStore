@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using TechStore.Api.Data.Enteties;
@@ -59,12 +60,18 @@ namespace TechStore.Api
 
             services.AddDataProtection();
 
+            services.AddLogging(config =>
+            {
+                config.AddDebug();
+                config.AddConsole();
+            });
+
             services.AddScoped<Validator>();
             services.AddScoped<IRepository<Product>, ProductRepository>();
             services.AddScoped<IRepository<User>, UserRepository>();
             services.AddScoped<IRepository<Cart>, CartRepository>();
             services.AddScoped<IRepository<Order>, OrderRepository>();
-            services.AddScoped<IRepository<CartProduct>>();
+            services.AddScoped<IRepository<CartProduct>, CartProductRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

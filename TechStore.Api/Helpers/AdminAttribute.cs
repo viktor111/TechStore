@@ -9,20 +9,25 @@ namespace TechStore.Api.Helpers
 {
     public class AdminAttribute : Attribute, IAuthorizationFilter
     {
-        public AdminAttribute()
-        {
-        }
 
         public void OnAuthorization(AuthorizationFilterContext context)
         {
-            var userAdminClaim = context.HttpContext.User.Claims.First(c => c.Type == "admin");
+            try
+            {
+                var userAdminClaim = context.HttpContext.User.Claims.First(c => c.Type == ClaimTypes.Role);
 
-            var flaseAdminClaim = new Claim("admin", "False");
+                var flaseAdminClaim = new Claim(ClaimTypes.Role, "False");
 
-            if (userAdminClaim.Value == flaseAdminClaim.Value)
+                if (userAdminClaim.Value == flaseAdminClaim.Value)
+                {
+                    context.Result = new JsonResult(new { message = "Forbidden for normal users" }) { StatusCode = StatusCodes.Status403Forbidden };
+                }
+            }
+            catch (Exception ex)
             {
                 context.Result = new JsonResult(new { message = "Forbidden for normal users" }) { StatusCode = StatusCodes.Status403Forbidden };
             }
+
         }
     }
 }

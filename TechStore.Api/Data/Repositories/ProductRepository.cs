@@ -38,14 +38,6 @@ namespace TechStore.Api.Data.Repositories
             return result;
         }
 
-        //public async override Task<Product> Update(Product entity)
-        //{
-        //    var product = await _dbContext.Products
-        //        .SingleAsync(p => p.Id == entity.Id);
-
-        //    return product;
-        //}
-
         public async override Task<Product> Delete(Product product)
         {
             var cartProducts = await _dbContext.CartProducts
@@ -74,14 +66,9 @@ namespace TechStore.Api.Data.Repositories
                 product.CartProduct.Add(new CartProduct { CartId = cart.Id });
             }
 
+            cart.Price += product.Price;
+
             return product;
         }
-
-
-        //public override IEnumerable<Product> Find(Expression<Func<Product, bool>> predicate)
-        //{
-        //    return _dbContext.Product
-        //        .Where(predicate);
-        //}
     }
 }

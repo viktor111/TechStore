@@ -70,7 +70,6 @@ namespace TechStore.Api.Data.Repositories
         public async virtual Task<T> Update(T entity)
         {
             var result = _dbContext.Update(entity).Entity;
-            //await SaveChanges();
             return result;
         }
 
@@ -96,6 +95,16 @@ namespace TechStore.Api.Data.Repositories
             var genericDb = await _dbContext.Set<T>().Where(predicate).ToListAsync();
 
             return genericDb;
+        }
+
+        public async Task<IEnumerable<T>> PagedList(PagedParameters parameters)
+        {
+            var pageList = await _dbContext.Set<T>()
+                .Skip((parameters.PageNumber - 1) * parameters.PageSize)
+                .Take(parameters.PageSize)
+                .ToListAsync();
+
+            return pageList;
         }
     }
 }

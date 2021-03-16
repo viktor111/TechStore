@@ -14,9 +14,10 @@ namespace TechStore.Api.Data.Enteties
 
         public string Description { get; set; }
 
+        public string Picture { get; set; }
+
         public CategoryType Category { get; set; }
 
         public ICollection<CartProduct> CartProduct { get; set; }
-
     }
 }

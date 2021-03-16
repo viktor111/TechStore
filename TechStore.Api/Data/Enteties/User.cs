@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using Microsoft.AspNetCore.Identity;
 
 namespace TechStore.Api.Data.Enteties
@@ -28,5 +29,7 @@ namespace TechStore.Api.Data.Enteties
         public Cart Cart { get; set; }
 
         public int CartId { get; set; }
+
+        ICollection<Order> Orders { get; set; }
     }
 }

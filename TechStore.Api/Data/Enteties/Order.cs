@@ -12,6 +12,13 @@ namespace TechStore.Api.Data.Enteties
 
         public string PhoneNumber { get; set; }
 
-        public decimal Price { get; set; }        
+        public decimal Price { get; set; }
+
+        public User User { get; set; }
+
+        public int UserId { get; set; }
+
+        public int ProductCount { get; set; }
+
     }
 }

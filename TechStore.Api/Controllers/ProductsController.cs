@@ -9,6 +9,7 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
+using TechStore.Api.Helpers;
 using TechStore.Models.Models;
 
 namespace TechStore.Api.Controllers
@@ -40,13 +41,13 @@ namespace TechStore.Api.Controllers
         }
 
         [HttpGet]
-        public async Task<ActionResult<ProductModel[]>> Get()
+        public async Task<ActionResult<ProductModel[]>> Get([FromQuery] PagedParameters productParameters)
         {
             try
             {                
                 _logger.LogInformation($"Getting Products...");
 
-                var data = await _productRepository.All();
+                var data = await _productRepository.PagedList(productParameters);
 
                 var result = _mapper.Map<ProductModel[]>(data);
 
@@ -91,7 +92,8 @@ namespace TechStore.Api.Controllers
             }
         }
 
-        [HttpPost]        
+        [HttpPost]
+        [Admin]
         public async Task<ActionResult<ProductModel>> Post(ProductModel model)
         {
             try
@@ -124,6 +126,7 @@ namespace TechStore.Api.Controllers
         }
 
         [HttpPut("{id:int}")]
+        [Admin]
         public async Task<ActionResult<ProductModel>> Put(int id, ProductModel model)
         {
             try
@@ -158,11 +161,13 @@ namespace TechStore.Api.Controllers
         }
 
         [HttpDelete("{id:int}")]
-        [Authorize]
+        [Admin]
         public async Task<ActionResult<ProductModel>> Delete(int id)
         {
             try
             {
+                _logger.LogInformation($"Deleting product with id {id}");
+
                 var oldProduct = await _productRepository.Get(id);
 
                 if(oldProduct is null)
@@ -191,12 +196,22 @@ namespace TechStore.Api.Controllers
 
         }
 
-        [HttpPost("{productId:int}/{cartId:int}")]
-        public async Task<ActionResult<ProductModel>> AddToCart(int productId, int cartId, bool includeCart = false)
+        [HttpPost("{productId:int}")]
+        [Authorize]
+        public async Task<ActionResult<ProductModel>> AddToCart(int productId, bool includeCart = false)
         {
             try
             {
+                int? cartIdNullable = AuthenticatedUserData.GetCartId(HttpContext);
+
+                if (cartIdNullable is null) return BadRequest("Cart id error");
+
+                int cartId = (int)cartIdNullable;
+
+                _logger.LogInformation($"Adding product with id {productId} to cart with {cartId}");
+
                 var product = await _productRepository.Get(productId, includeCart);
+
                 var cart = await _cartRepository.Get(cartId);
 
                 if(product is null)

@@ -15,6 +15,10 @@ namespace TechStore.Models.Models
 
         public decimal Price { get; set; }
 
-        public List<ProductModel> Products { get; set; }        
+        public int UserId { get; set; }
+
+        public int ProductCount { get; set; }
+
+        public ICollection<ProductModel> Products { get; set; }        
     }
 }

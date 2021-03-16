@@ -30,5 +30,7 @@ namespace TechStore.Api.Data.Repositories
         Task<AuthenticateResponse> Authenticate(T model);
 
         Task<List<T>> GetListByProperty(Expression<Func<T, bool>> predicate);
+
+        Task<IEnumerable<T>> PagedList(PagedParameters parameters);
     }
 }

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Security.Claims;
-using System.Text;
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -11,7 +7,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Microsoft.IdentityModel.Tokens;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
 using TechStore.Api.Helpers;
@@ -51,7 +46,6 @@ namespace TechStore.Api.Controllers
 
         [HttpGet("{id:int}")]
         [Authorize]
-        [Admin]
         public async Task<ActionResult<UserModel>> Get(int id, bool includeCart = false)
         {
             try
@@ -120,7 +114,8 @@ namespace TechStore.Api.Controllers
         {
             try
             {
-                _logger.LogInformation("a");
+                _logger.LogInformation("Start login process");
+
                 var usernameValid = await _validator.CheckUsernameExistance(username);
 
                 if (usernameValid is false) return BadRequest("Username does not exist");
@@ -133,7 +128,18 @@ namespace TechStore.Api.Controllers
 
                 if (passwordValid is false) return BadRequest("Invalid password");
 
-                var userClaimsGenerator = new AdminClaims();
+                var userClaimsGenerator = new UserClaims();
+
+                if (user.IsAdmin == true)
+                {
+                    var adminClaimsGenerator = new AdminClaims();
+
+                    var adminClaims = adminClaimsGenerator.GenerateClaims(user);
+
+                    var adminToken = Authenticator.GenerateToken(adminClaims, daysUntilTokenExpires);
+
+                    return Ok(adminToken);
+                }
 
                 var userClaims = userClaimsGenerator.GenerateClaims(user);
 
