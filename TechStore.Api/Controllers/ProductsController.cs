@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
@@ -167,6 +168,8 @@ namespace TechStore.Api.Controllers
             try
             {
                 _logger.LogInformation($"Deleting product with id {id}");
+
+                var user = HttpContext.User.Claims;
 
                 var oldProduct = await _productRepository.Get(id);
 

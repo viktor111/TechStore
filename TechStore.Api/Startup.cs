@@ -19,6 +19,7 @@ namespace TechStore.Api
     public class Startup
     {
         private readonly IConfiguration _configuration;
+        readonly string MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 
         public Startup(IConfiguration configuration)
         {
@@ -52,6 +53,16 @@ namespace TechStore.Api
                     };
                 });
 
+            services.AddCors(options =>
+            {
+                options.AddPolicy("CorsPolicy",
+                    builder => builder
+                        .AllowAnyMethod()
+                        .AllowCredentials()
+                        .SetIsOriginAllowed((host) => true)
+                        .AllowAnyHeader());
+            });
+
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -74,7 +85,6 @@ namespace TechStore.Api
             services.AddScoped<IRepository<CartProduct>, CartProductRepository>();
         }
 
-        // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
             if (env.IsDevelopment())
@@ -86,9 +96,11 @@ namespace TechStore.Api
 
             app.UseHttpsRedirection();
 
-            app.UseAuthentication();
+            app.UseCors("CorsPolicy");
 
             app.UseRouting();
+
+            app.UseAuthentication();
 
             app.UseAuthorization();
 

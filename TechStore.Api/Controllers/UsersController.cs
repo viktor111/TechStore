@@ -130,22 +130,11 @@ namespace TechStore.Api.Controllers
 
                 var userClaimsGenerator = new UserClaims();
 
-                if (user.IsAdmin == true)
-                {
-                    var adminClaimsGenerator = new AdminClaims();
+                var tokenFactory = new TokenFactory(user, daysUntilTokenExpires);
 
-                    var adminClaims = adminClaimsGenerator.GenerateClaims(user);
+                var tokenGenerated = tokenFactory.CreateToken();
 
-                    var adminToken = Authenticator.GenerateToken(adminClaims, daysUntilTokenExpires);
-
-                    return Ok(adminToken);
-                }
-
-                var userClaims = userClaimsGenerator.GenerateClaims(user);
-
-                var token = Authenticator.GenerateToken(userClaims, daysUntilTokenExpires);
-
-                return Ok(token);
+                return Ok(tokenGenerated);
             }
             catch (Exception ex)
             {
