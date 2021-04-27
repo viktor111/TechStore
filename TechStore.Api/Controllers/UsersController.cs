@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
+using TechStore.Api.Authentication;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
 using TechStore.Api.Helpers;

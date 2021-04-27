@@ -1,12 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
-using TechStore.Api.Data.Enteties;
 
-namespace TechStore.Api.Helpers
+namespace TechStore.Api.Authentication
 {
-    public static class AuthenticatedUserData
+   public static class AuthenticatedUserData
     {
         public static int? GetCartId(HttpContext context)
         {

@@ -1,11 +1,9 @@
-﻿using System;
 using System.Threading.Tasks;
-using Microsoft.Extensions.Logging;
 using TechStore.Api.Data.Enteties;
 using TechStore.Api.Data.Repositories;
 using BC = BCrypt.Net.BCrypt;
 
-namespace TechStore.Api.Helpers
+namespace TechStore.Api.Authentication
 {
     public class Validator
     {

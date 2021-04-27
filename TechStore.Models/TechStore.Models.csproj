@@ -9,6 +9,8 @@
     <Folder Include="Types\" />
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="MySql.Data" Version="8.0.24" />
+    <PackageReference Include="MySql.Data.EntityFrameworkCore" Version="8.0.22" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
   </ItemGroup>
 </Project>

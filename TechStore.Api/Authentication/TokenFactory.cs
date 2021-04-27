@@ -1,7 +1,7 @@
-﻿using System;
 using TechStore.Api.Data.Enteties;
+using TechStore.Api.Helpers;
 
-namespace TechStore.Api.Helpers
+namespace TechStore.Api.Authentication
 {
     public class TokenFactory
     {

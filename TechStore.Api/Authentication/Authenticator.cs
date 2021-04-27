@@ -1,10 +1,10 @@
-﻿using System;
-using Microsoft.IdentityModel.Tokens;
-using System.Text;
-using System.Security.Claims;
+using System;
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Text;
+using Microsoft.IdentityModel.Tokens;
 
-namespace TechStore.Api.Helpers
+namespace TechStore.Api.Authentication
 {
     public static class Authenticator
     {
@@ -25,12 +25,12 @@ namespace TechStore.Api.Helpers
         {
             var token = new JwtSecurityToken(
                 Constants.Issuer,
-                Constants.Audiance,
+                Constants.Audience,
                 claims,
                 notBefore: DateTime.Now,
                 expires: DateTime.Now.AddDays(daysUntilExpire),
                 GenerateSignature()
-                );
+            );
 
             var tokenJson = new JwtSecurityTokenHandler().WriteToken(token);
 

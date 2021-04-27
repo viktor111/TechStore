@@ -1,11 +1,11 @@
-﻿using System;
+using System;
 using System.Linq;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace TechStore.Api.Helpers
+namespace TechStore.Api.Authentication
 {
     public class AdminAttribute : Attribute, IAuthorizationFilter
     {

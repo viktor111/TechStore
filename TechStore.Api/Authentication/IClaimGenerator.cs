@@ -1,8 +1,7 @@
-﻿using System;
 using System.Security.Claims;
 using TechStore.Api.Data.Enteties;
 
-namespace TechStore.Api.Helpers
+namespace TechStore.Api.Authentication
 {
     public interface IClaimGenerator<T>
     {
